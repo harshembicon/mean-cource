@@ -5,8 +5,16 @@ import { ActivatedRoute, ParamMap } from "@angular/router";
 import { PostsService } from "../posts.service";
 import { Post } from "../post.model";
 import { mimeType } from "./mime-type.validator";
-import { MatRadioButton, MatRadioChange } from '@angular/material/radio';
 
+interface Food {
+  value: string;
+  viewValue: string;
+}
+
+interface Shoe {
+  value: string;
+  viewValue: string;
+}
 @Component({
   selector: "app-post-create",
   templateUrl: "./post-create.component.html",
@@ -16,34 +24,29 @@ export class PostCreateComponent implements OnInit {
   enteredTitle = "";
   enteredContent = "";
   post: Post;
-  // gender: boolean;
+  gender:'1';
   isLoading = false;
   form: FormGroup;
   imagePreview: string;
   private mode = "create";
   private postId: string;
-
+  foods: Food[] = [
+    {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'},
+    {value: 'tacos-2', viewValue: 'Tacos'}
+  ];
+  typesOfShoes: Shoe[] = [
+    {value: 'boots-0', viewValue: 'Boots'},
+    {value: 'clogs-1', viewValue: 'Clogs'},
+    {value: 'Loafers-2', viewValue: 'Loafers'}
+  ];
+  //  typesOfShoes: string[] = ['Boots', 'Clogs', 'Loafers'];
+date: string;
   constructor(
     public postsService: PostsService,
     public route: ActivatedRoute
   ) {}
 
-  // onChange(mrChange: MatRadioChange) {
-  //   console.log(mrChange.value);
-  //   let mrButton: MatRadioButton = mrChange.source;
-  //   console.log(mrButton.name);
-  //   console.log(mrButton.checked);
-  //   console.log(mrButton.inputId);
-  //   console.log(mrButton.radioGroup.name);
-  // }
-
-  onChange(mrChange: MatRadioChange) {
-    console.log(mrChange.value);
-    let mrButton: MatRadioButton = mrChange.source;
-    console.log(mrButton.name);
-    console.log(mrButton.checked);
-    console.log(mrButton.inputId);
- }
   ngOnInit() {
     this.form = new FormGroup({
       title: new FormControl(null, {
@@ -55,6 +58,9 @@ export class PostCreateComponent implements OnInit {
         asyncValidators: [mimeType]
       }),
       gender: new FormControl(null, { validators: [Validators.required] }),
+      foods: new FormControl(null, { validators: [Validators.required] }),
+      typesOfShoes: new FormControl(null, { validators: [Validators.required] }),
+      date: new FormControl(null, { validators: [Validators.required] }),
     });
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has("postId")) {
@@ -68,13 +74,19 @@ export class PostCreateComponent implements OnInit {
             title: postData.title,
             content: postData.content,
             imagePath: postData.imagePath,
-            // gender: postData.gender
+            gender: postData.gender,
+            foods: postData.foods,
+            typesOfShoes: postData.typesOfShoes,
+            date: postData.date,
           };
           this.form.setValue({
             title: this.post.title,
             content: this.post.content,
             image: this.post.imagePath,
-            // gender: this.post.gender
+            gender: this.post.gender,
+            foods: this.post.foods,
+            typesOfShoes: this.post.typesOfShoes,
+            date: this.post.date
           });
         });
       } else {
@@ -107,7 +119,10 @@ export class PostCreateComponent implements OnInit {
         this.form.value.title,
         this.form.value.content,
         this.form.value.image,
-        //  this.form.value.gender,
+        this.form.value.gender,
+        this.form.value.foods,
+        this.form.value.typesOfShoes,
+        this.form.value.date
       );
     } else {
       this.postsService.updatePost(
@@ -115,11 +130,12 @@ export class PostCreateComponent implements OnInit {
         this.form.value.title,
         this.form.value.content,
         this.form.value.image,
-        // this.form.value.gender
-
+        this.form.value.gender,
+        this.form.value.foods,
+        this.form.value.typesOfShoes,
+        this.form.value.date
       );
     }
     this.form.reset();
   }
-
 }

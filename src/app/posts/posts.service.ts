@@ -27,7 +27,11 @@ export class PostsService {
                 title: post.title,
                 content: post.content,
                 id: post._id,
-                imagePath: post.imagePath
+                imagePath: post.imagePath,
+                gender: post.gender,
+                foods: post.foods,
+                typesOfShoes: post.typesOfShoes,
+                date: post.date
               };
             }),
             maxPosts: postData.maxPosts
@@ -53,14 +57,22 @@ export class PostsService {
       title: string;
       content: string;
       imagePath: string;
+      gender: string;
+      foods: string;
+      typesOfShoes: string;
+      date: string;
     }>("http://localhost:3000/api/posts/" + id);
   }
 
-  addPost(title: string, content: string, image: File) {
+  addPost(title: string, content: string, image: File, gender: string, foods: string, typesOfShoes: string, date: string) {
     const postData = new FormData();
     postData.append("title", title);
     postData.append("content", content);
     postData.append("image", image, title);
+    postData.append("gender", gender);
+    postData.append("foods", foods);
+    postData.append("typesOfShoes", typesOfShoes);
+    postData.append("date", date);
     this.http
       .post<{ message: string; post: Post }>(
         "http://localhost:3000/api/posts",
@@ -71,7 +83,7 @@ export class PostsService {
       });
   }
 
-  updatePost(id: string, title: string, content: string, image: File | string) {
+  updatePost(id: string, title: string, content: string, image: File | string, gender: string, foods: string, typesOfShoes: string, date: string) {
     let postData: Post | FormData;
     if (typeof image === "object") {
       postData = new FormData();
@@ -79,12 +91,20 @@ export class PostsService {
       postData.append("title", title);
       postData.append("content", content);
       postData.append("image", image, title);
+      postData.append("gender", gender);
+      postData.append("foods", foods);
+      postData.append("typesOfShoes", typesOfShoes);
+      postData.append("date", date);
     } else {
       postData = {
         id: id,
         title: title,
         content: content,
-        imagePath: image
+        imagePath: image,
+        gender: gender,
+        foods: foods,
+        typesOfShoes: typesOfShoes,
+        date: date
       };
     }
     this.http

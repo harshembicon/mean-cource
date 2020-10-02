@@ -41,8 +41,11 @@ router.post(
       title: req.body.title,
       content: req.body.content,
       imagePath: url + "/images/" + req.file.filename,
-      // gender: req.body.gender,
-      creator: req.userData.userId
+      gender: req.body.gender,
+      foods: req.body.foods,
+      typesOfShoes: req.body.typesOfShoes,
+      date: req.body.date,
+      creator: req.userData.userId,
     });
     post.save().then(createdPost => {
       res.status(201).json({
@@ -71,7 +74,10 @@ router.put(
       title: req.body.title,
       content: req.body.content,
       imagePath: imagePath,
-      // gender:  gender,
+      gender:  req.body.gender,
+      foods: req.body.foods,
+      typesOfShoes: req.body.typesOfShoes,
+      date: req.body.date,
       creator: req.userData.userId
     });
     Post.updateOne(
